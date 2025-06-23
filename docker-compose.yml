@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: contactsdb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  backend:
+    build: ./backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - db
+    ports:
+      - '5000:5000'
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:80'
+    depends_on:
+      - backend
+volumes:
+  db-data:
